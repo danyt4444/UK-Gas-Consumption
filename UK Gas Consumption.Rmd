@@ -1,0 +1,73 @@
+---
+title: "UK Gas Consumption"
+output:
+  pdf_document: default
+  html_document: default
+date: '2022-09-26'
+---
+
+```{r}
+
+data("UKgas")
+UKgas
+```
+
+## This is a Timeseries that shows the quarterly UK gas consumption from 1960 to 1986. 
+## This data set is deleivered in a quarterly fashion.
+
+
+```{r}
+library(fpp)
+library(fpp2)
+library(forecast)
+plot(UKgas)
+```
+
+## My guess is that the acf would show that there is trend, as time goes on the consumption of gas is definitely increasing. There could also be some seasonality as well as we can see that Q1 has the highest gas consumption throughout the years and Q3 has the lowest gas consumption.
+
+
+```{r}
+acf(UKgas)
+```
+
+## From this we can see that there is in fact a trend; the value of weight of the lags are going down as the lags increase. In addition, there are elements of seasonality; we can clearly see the highs and the lows. We can see that there is also statistical significance.
+
+
+
+```{r}
+temp <- HoltWinters(UKgas)
+attributes(temp)
+```
+
+
+```{r}
+plot(temp)
+```
+
+
+```{r}
+temp_f <- forecast(temp)
+attributes(temp_f)
+```
+
+```{r}
+plot(temp_f$residuals)
+```
+
+```{r}
+hist(temp_f$residuals)
+```
+
+```{r}
+Acf(temp_f$residuals)
+```
+
+
+```{r}
+accuracy(temp_f)
+```
+
+
+
+# We can see that the acf of the residuals show there is no statistical significance. 
+# We can also see that there is no trend or seasonality in the acf. 
